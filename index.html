@@ -3,85 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video with Hidden Screen</title>
+    <title>Saddam Only, No Muqtada</title>
     <style>
-        body, html {
+        body {
             margin: 0;
-            padding: 0;
-            height: 100%;
-            overflow: hidden;
-            background-color: black;
-        }
-        .video-container {
-            position: relative;
-            height: 100%;
-            width: 100%;
-        }
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        .black-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: black;
-            z-index: 1;
-            transition: opacity 1s;
-        }
-        .video-container.loaded .black-screen {
-            opacity: 0;
-            pointer-events: none;
-        }
-        .overlay-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 3em;
+            font-family: 'Arial', sans-serif;
+            background: black;
             color: white;
-            font-weight: bold;
-            text-align: center;
+            overflow: hidden;
+        }
+
+        /* Main Heading Style with RGB Animation */
+        h1 {
+            font-size: 80px;
+            position: absolute;
+            top: 30px;
+            left: 10%;
+            font-family: 'Arial', sans-serif;
+            animation: colorChange 3s infinite, move 5s infinite ease-in-out;
+            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.8);
             z-index: 2;
         }
-        .blue {
-            color: blue;
+
+        @keyframes colorChange {
+            0% { color: red; }
+            25% { color: green; }
+            50% { color: blue; }
+            75% { color: purple; }
+            100% { color: red; }
         }
-        .red {
-            color: red;
+
+        @keyframes move {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(200px); }
         }
+
+        /* RGB Overlay Effect */
+        .rgb-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, rgba(255,0,0,0.5), rgba(0,255,0,0.5), rgba(0,0,255,0.5));
+            mix-blend-mode: screen;
+            animation: pulse 5s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.2; }
+            50% { opacity: 0.5; }
+            100% { opacity: 0.2; }
+        }
+
+        /* Hidden YouTube Video */
+        .hidden-video {
+            position: absolute;
+            width: 0;
+            height: 0;
+            z-index: 0;
+        }
+
+        /* Cool button for user interaction */
+        .cool-btn {
+            position: absolute;
+            top: 20%;
+            left: 40%;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 2;
+            transition: transform 0.3s;
+        }
+
+        .cool-btn:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+        }
+
+        /* Video overlay container */
+        .video-overlay {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            opacity: 0.8;
+        }
+
+        /* Footer */
+        footer {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 18px;
+            z-index: 2;
+        }
+
     </style>
 </head>
 <body>
-    <div class="video-container">
-        <iframe id="video" src="https://www.youtube.com/embed/8JOb5LEnRoc?autoplay=1&loop=1&playlist=8JOb5LEnRoc" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        <div class="black-screen" id="blackScreen"></div>
-        <div class="overlay-text">
-            <span class="blue">I</span>
-            <span class="red">love</span>
-            <span class="blue">world</span>
-        </div>
-    </div>
-    <script>
-        // Wait for the video to start before removing the black screen
-        document.addEventListener('DOMContentLoaded', function() {
-            var iframe = document.getElementById('video');
-            var blackScreen = document.getElementById('blackScreen');
+    <!-- RGB Header Text Animation -->
+    <h1>YOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VMYOU HAVE BEEN HACKED BY MR VM</h1>
 
-            // Check if the iframe is loaded
-            iframe.addEventListener('load', function() {
-                // Add a slight delay to ensure video starts
-                setTimeout(function() {
-                    document.querySelector('.video-container').classList.add('loaded');
-                }, 1000); // Adjust the delay as needed
-            });
-        });
+    <!-- RGB Video Overlay -->
+    <div class="rgb-overlay"></div>
+
+    <!-- Cool Button Interaction -->
+    <button class="cool-btn" onclick="playAudio()">Click to Start Audio</button>
+
+    <!-- Video Overlay from YouTube -->
+    <iframe class="video-overlay" src="https://www.youtube.com/embed/8JOb5LEnRoc?autoplay=1&mute=0&loop=1&playlist=8JOb5LEnRoc" allow="autoplay; encrypted-media" frameborder="0"></iframe>
+
+    <!-- Hidden YouTube Audio for Music -->
+    <iframe class="hidden-video" id="youtubeAudio" src="https://www.youtube.com/embed/8JOb5LEnRoc?autoplay=1&loop=1&playlist=8JOb5LEnRoc"></iframe>
+
+    <!-- Footer -->
+    <footer>Audio Loop Active</footer>
+
+    <!-- JavaScript -->
+    <script>
+        function playAudio() {
+            var audioFrame = document.getElementById('youtubeAudio');
+            audioFrame.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+        }
     </script>
 </body>
 </html>
