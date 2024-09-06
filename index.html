@@ -3,53 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saddam Only</title>
+    <title>Video with Text Overlay</title>
     <style>
-        body {
+        body, html {
             margin: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: black;
-            color: white;
+            padding: 0;
+            height: 100%;
             overflow: hidden;
         }
-
-        h1 {
-            font-size: 100px;
-            font-family: Arial, sans-serif;
-            animation: colorChange 2s infinite, move 5s infinite ease-in-out;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        .video-container {
+            position: relative;
+            height: 100%;
+            width: 100%;
         }
-
-        @keyframes colorChange {
-            0% { color: red; }
-            25% { color: green; }
-            50% { color: blue; }
-            75% { color: yellow; }
-            100% { color: red; }
-        }
-
-        @keyframes move {
-            0%, 100% { transform: translateX(0); }
-            50% { transform: translateX(200px); }
-        }
-
-        /* Hide the iframe so it's only the audio we hear */
-        .hidden-video {
+        .video-container iframe {
             position: absolute;
-            width: 0;
-            height: 0;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             border: none;
+        }
+        .overlay-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3em;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        .blue {
+            color: blue;
+        }
+        .red {
+            color: red;
         }
     </style>
 </head>
 <body>
-    <h1>iraq only coad</h1>
-
-    <!-- Hidden YouTube Video for Audio Only -->
-    <iframe class="hidden-video" id="youtubeAudio" src="https://www.youtube.com/embed/8JOb5LEnRoc?autoplay=1&loop=1&playlist=8JOb5LEnRoc"></iframe>
-
+    <div class="video-container">
+        <iframe src="https://www.youtube.com/embed/8JOb5LEnRoc?autoplay=1&loop=1&playlist=8JOb5LEnRoc" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <div class="overlay-text">
+            <span class="blue">I</span>
+            <span class="red">love</span>
+            <span class="blue">world</span>
+        </div>
+    </div>
 </body>
 </html>
