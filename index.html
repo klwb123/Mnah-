@@ -36,23 +36,20 @@
             50% { transform: translateX(200px); }
         }
 
-        audio {
-            display: none;
+        /* Hide the iframe so it's only the audio we hear */
+        .hidden-video {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border: none;
         }
     </style>
 </head>
 <body>
-    <h1>no sddam no moqtda hitler only</h1>
+    <h1>iraq only coad</h1>
 
-    <!-- YouTube Audio -->
-    <audio id="youtubeAudio" autoplay loop>
-        <source src="https://www.youtube.com/embed/8JOb5LEnRoc?autoplay=1" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
+    <!-- Hidden YouTube Video for Audio Only -->
+    <iframe class="hidden-video" id="youtubeAudio" src="https://www.youtube.com/embed/8JOb5LEnRoc?autoplay=1&loop=1&playlist=8JOb5LEnRoc"></iframe>
 
-    <script>
-        const audio = document.getElementById('youtubeAudio');
-        audio.play();
-    </script>
 </body>
 </html>
