@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video with Text Overlay</title>
+    <title>Video with Hidden Screen</title>
     <style>
         body, html {
             margin: 0;
             padding: 0;
             height: 100%;
             overflow: hidden;
+            background-color: black;
         }
         .video-container {
             position: relative;
@@ -24,6 +25,20 @@
             height: 100%;
             border: none;
         }
+        .black-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index: 1;
+            transition: opacity 1s;
+        }
+        .video-container.loaded .black-screen {
+            opacity: 0;
+            pointer-events: none;
+        }
         .overlay-text {
             position: absolute;
             top: 50%;
@@ -33,6 +48,7 @@
             color: white;
             font-weight: bold;
             text-align: center;
+            z-index: 2;
         }
         .blue {
             color: blue;
@@ -44,12 +60,28 @@
 </head>
 <body>
     <div class="video-container">
-        <iframe src="https://www.youtube.com/embed/8JOb5LEnRoc?autoplay=1&loop=1&playlist=8JOb5LEnRoc" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <iframe id="video" src="https://www.youtube.com/embed/8JOb5LEnRoc?autoplay=1&loop=1&playlist=8JOb5LEnRoc" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <div class="black-screen" id="blackScreen"></div>
         <div class="overlay-text">
             <span class="blue">I</span>
             <span class="red">love</span>
             <span class="blue">world</span>
         </div>
     </div>
+    <script>
+        // Wait for the video to start before removing the black screen
+        document.addEventListener('DOMContentLoaded', function() {
+            var iframe = document.getElementById('video');
+            var blackScreen = document.getElementById('blackScreen');
+
+            // Check if the iframe is loaded
+            iframe.addEventListener('load', function() {
+                // Add a slight delay to ensure video starts
+                setTimeout(function() {
+                    document.querySelector('.video-container').classList.add('loaded');
+                }, 1000); // Adjust the delay as needed
+            });
+        });
+    </script>
 </body>
 </html>
