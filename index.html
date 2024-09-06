@@ -3,9 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Saddam Only</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: black;
+            color: white;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 100px;
+            font-family: Arial, sans-serif;
+            animation: colorChange 2s infinite, move 5s infinite ease-in-out;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes colorChange {
+            0% { color: red; }
+            25% { color: green; }
+            50% { color: blue; }
+            75% { color: yellow; }
+            100% { color: red; }
+        }
+
+        @keyframes move {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(200px); }
+        }
+
+        audio {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <h1>saddam hussian and moqtda on head</h1>
+    <h1>Saddam Only, No Muqtada</h1>
+
+    <!-- YouTube Audio -->
+    <audio id="youtubeAudio" autoplay loop>
+        <source src="https://www.youtube.com/embed/8JOb5LEnRoc?autoplay=1" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        const audio = document.getElementById('youtubeAudio');
+        audio.play();
+    </script>
 </body>
 </html>
