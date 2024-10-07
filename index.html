@@ -21,7 +21,7 @@
         h1 {
             margin-bottom: 30px;
         }
-        #choose-file-button, #encrypt-button {
+        #choose-file-button, #encrypt-button, #crypter-button {
             padding: 15px 30px;
             font-size: 18px;
             border: none;
@@ -44,13 +44,20 @@
         #encrypt-button:hover {
             background-color: #333; /* Darker black on hover */
         }
+        #crypter-button {
+            background-color: #ff4500; /* Orange theme */
+            color: white;
+        }
+        #crypter-button:hover {
+            background-color: #ff6347; /* Darker orange on hover */
+        }
         input[type="file"] {
             display: none; /* Hides the file input */
         }
-        #file-name {
+        #file-name, #base64-output {
             margin-top: 20px;
             font-size: 18px;
-            color: #ffeb3b; /* Yellow color for file name */
+            color: #ffeb3b; /* Yellow color for file name and output */
         }
         #countdown {
             margin-top: 10px;
@@ -63,15 +70,31 @@
 
     <h1>File Encryptor</h1>
     <label id="choose-file-button" for="file-input">Choose File Wanna to Crypt</label>
-    <input type="file" id="file-input" />
+    <input type="file" id="file-input" accept=".exe" />
 
     <button id="encrypt-button">Encrypt</button>
+    <button id="crypter-button">Crypter</button>
     <div id="countdown"></div>
 
     <!-- Box to display the selected file name -->
     <div id="file-name">No file chosen</div>
+    <div id="base64-output"></div> <!-- Output for Base64 encoded file -->
 
     <script>
+        let selectedFile;
+
+        // Display the name of the chosen file
+        document.getElementById("file-input").addEventListener("change", function() {
+            const fileNameDisplay = document.getElementById("file-name");
+            if (this.files.length > 0) {
+                selectedFile = this.files[0]; // Store the selected file
+                fileNameDisplay.textContent = "Selected file: " + selectedFile.name;
+                document.getElementById("base64-output").textContent = ""; // Clear previous output
+            } else {
+                fileNameDisplay.textContent = "No file chosen";
+            }
+        });
+
         // Add event listener for the encrypt button
         document.getElementById("encrypt-button").addEventListener("click", function() {
             let countdownValue = 10; // Set countdown value to 10 seconds
@@ -92,14 +115,37 @@
             }, 1000); // Update every second
         });
 
-        // Display the name of the chosen file
-        document.getElementById("file-input").addEventListener("change", function() {
-            const fileNameDisplay = document.getElementById("file-name");
-            if (this.files.length > 0) {
-                fileNameDisplay.textContent = "Selected file: " + this.files[0].name;
-            } else {
-                fileNameDisplay.textContent = "No file chosen";
+        // Add event listener for the crypter button
+        document.getElementById("crypter-button").addEventListener("click", function() {
+            if (!selectedFile) {
+                alert("Please choose a file first.");
+                return;
             }
+
+            let countdownValue = 10; // Set countdown value to 10 seconds
+            const countdownDisplay = document.getElementById("countdown");
+            countdownDisplay.textContent = `Encoding in ${countdownValue} seconds...`;
+
+            // Countdown interval
+            const countdownInterval = setInterval(() => {
+                countdownValue--;
+                countdownDisplay.textContent = `Encoding in ${countdownValue} seconds...`;
+
+                // After 10 seconds, encode the file to Base64 and clear the interval
+                if (countdownValue <= 0) {
+                    clearInterval(countdownInterval);
+                    const reader = new FileReader();
+
+                    reader.onload = function(event) {
+                        const base64String = event.target.result.split(',')[1]; // Get Base64 part
+                        document.getElementById("base64-output").textContent = "Base64 Encoded File: " + base64String;
+                    };
+
+                    // Read the file as a Data URL (Base64)
+                    reader.readAsDataURL(selectedFile);
+                    countdownDisplay.textContent = ""; // Clear countdown message
+                }
+            }, 1000); // Update every second
         });
     </script>
 
