@@ -61,16 +61,39 @@
         input[type="file"] {
             display: none; /* Hides the file input */
         }
-        #file-name, #base64-output {
+        #file-name {
             margin-top: 20px;
             font-size: 18px;
-            color: #ffeb3b; /* Yellow color for file name and output */
-            cursor: pointer; /* Change cursor to indicate clickable */
+            color: #ffeb3b; /* Yellow color for file name */
         }
         #countdown {
             margin-top: 10px;
             font-size: 20px;
             color: #ffeb3b; /* Yellow color for countdown */
+        }
+        #base64-container {
+            margin-top: 20px;
+        }
+        #base64-output {
+            border: 1px solid white; 
+            padding: 10px; 
+            display: inline-block; 
+            width: 400px; 
+            word-wrap: break-word; 
+            color: #ffeb3b; /* Yellow color for Base64 output */
+        }
+        #copy-button {
+            padding: 10px 15px;
+            font-size: 16px;
+            margin-left: 10px;
+            cursor: pointer;
+            background-color: #4caf50; /* Green theme */
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        #copy-button:hover {
+            background-color: #45a049; /* Darker green on hover */
         }
     </style>
 </head>
@@ -85,11 +108,15 @@
     <button id="encrypted-file-button">Encrypted File</button>
     <div id="countdown"></div>
 
-    <!-- Box to display the selected file name -->
     <div id="file-name">No file chosen</div>
     
-    <!-- Output for Base64 encoded file with a click-to-copy functionality -->
-    <div id="base64-output" onclick="copyToClipboard()" title="Click to copy to clipboard">Base64 Encoded File: Click to Generate</div> 
+    <!-- Box to display the Base64 encoded output -->
+    <div id="base64-container">
+        <div id="base64-output" onclick="copyToClipboard()" title="Click to copy to clipboard">
+            Base64 Encoded File: Click to Generate
+        </div>
+        <button id="copy-button" onclick="copyToClipboard()">Copy Base64</button>
+    </div>
 
     <script>
         let selectedFile;
