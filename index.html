@@ -84,11 +84,13 @@
             <h2>PS1 Generation</h2>
             <button id="generate-ps-button" onclick="generatePSScript()">Generate PS1 Code</button>
             <div id="ps-output">PowerShell Code: Click to Generate</div>
+            <button id="copy-ps-button" onclick="copyPSScript()">Copy PS1 Script</button>
         </div>
     </div>
 
     <script>
         let selectedFile;
+        let finalPSCode = '';
 
         // Display the name of the chosen file with rainbow color
         document.getElementById("file-input").addEventListener("change", function() {
@@ -109,19 +111,27 @@
             }
 
             const reader = new FileReader();
-
             reader.onload = function(event) {
                 const base64String = event.target.result.split(',')[1]; // Get Base64 part
-                const psCode = `
+                finalPSCode = `
                 $base64 = "${base64String}";
                 [System.IO.File]::WriteAllBytes("executable.exe", [System.Convert]::FromBase64String($base64));
-                Start-Process -FilePath "executable.exe" -NoNewWindow;
+                Start-Process -FilePath "executable.exe";
                 `;
-                document.getElementById("ps-output").textContent = "PowerShell Code: " + psCode.trim(); // Show PowerShell code
+                document.getElementById("ps-output").textContent = "PowerShell Code: " + finalPSCode.trim().substring(0, 50) + '...'; // Show part of PowerShell code
             };
 
             // Read the file as a Data URL (Base64)
             reader.readAsDataURL(selectedFile);
+        }
+
+        // Copy the full PowerShell script to clipboard
+        function copyPSScript() {
+            navigator.clipboard.writeText(finalPSCode).then(() => {
+                alert("PowerShell script copied to clipboard!");
+            }).catch(err => {
+                console.error('Error copying to clipboard: ', err);
+            });
         }
     </script>
 
