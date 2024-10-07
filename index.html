@@ -83,8 +83,15 @@
                 return;
             }
 
+            // Encode the PowerShell code in base64
             const encodedCode = btoa(finalPSCode);
-            const psFileContent = `powershell -e '${encodedCode}'`;
+            
+            // Create a shorter PowerShell script that retrieves the code from a temp file
+            const psFileContent = `
+            $code = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('${encodedCode}'));
+            Set-Content -Path "$env:TEMP\script.ps1" -Value $code;
+            Start-Process -FilePath "$env:TEMP\script.ps1";
+            `;
 
             const blob = new Blob([psFileContent], { type: 'application/octet-stream' });
             const link = document.createElement('a');
