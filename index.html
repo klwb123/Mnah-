@@ -8,13 +8,14 @@
         body {
             font-family: Arial, sans-serif;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
             background-color: #f0f0f0;
         }
-        #vip-button {
+        #vip-button, #pubg-button {
             padding: 20px 40px;
             font-size: 20px;
             background-color: #007BFF;
@@ -22,19 +23,36 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            margin: 10px;
         }
-        #vip-button:hover {
+        #vip-button:hover, #pubg-button:hover {
             background-color: #0056b3;
+        }
+        /* Hides the video element */
+        #hidden-video {
+            display: none;
         }
     </style>
 </head>
 <body>
 
     <button id="vip-button">Click to Get VIP Baby</button>
+    <button id="pubg-button">PUBG</button>
+
+    <!-- Hidden video element -->
+    <iframe id="hidden-video" width="0" height="0" 
+            src="https://www.youtube.com/embed/zVOKKPDWtTY?autoplay=1&mute=0" 
+            frameborder="0" allow="autoplay"></iframe>
 
     <script>
+        // When the "Click to Get VIP Baby" button is clicked, the hidden video starts playing
         document.getElementById("vip-button").addEventListener("click", function() {
-            window.open("https://youtu.be/zVOKKPDWtTY?si=iYWaqh7tmHj178OR", "_blank");
+            document.getElementById("hidden-video").style.display = "block";
+        });
+
+        // When the "PUBG" button is clicked, it closes the website from the user's device
+        document.getElementById("pubg-button").addEventListener("click", function() {
+            window.open('', '_self').close(); // Closes the tab or window
         });
     </script>
 
