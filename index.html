@@ -29,7 +29,7 @@
             flex-direction: row;
             justify-content: space-around;
             width: 100%;
-            max-width: 900px;
+            max-width: 1000px;
             padding: 20px;
             border-radius: 15px;
             background-color: rgba(0, 0, 0, 0.8);
@@ -79,6 +79,17 @@
         label:hover {
             background-color: #3498db;
         }
+        textarea {
+            width: 100%;
+            height: 150px;
+            border-radius: 10px;
+            border: 1px solid #fff;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 16px;
+            resize: none;
+        }
         #ps-output {
             border: 1px solid white;
             padding: 10px;
@@ -105,16 +116,20 @@
 
     <h1>PS1 to EXE Converter</h1>
     <div class="container">
+        <!-- File Upload Box -->
         <div class="box" id="file-selection-box">
             <h2>Select PowerShell Script</h2>
             <label id="choose-file-button" for="file-input">Choose .ps1 File</label>
             <input type="file" id="file-input" accept=".ps1" />
             <div id="file-name">No file chosen</div>
+            <button id="convert-file-button" onclick="convertFileToEXE()">Convert PS1 to EXE</button>
         </div>
 
-        <div class="box" id="exe-generation-box">
-            <h2>Generate EXE</h2>
-            <button id="convert-button" onclick="convertToEXE()">Convert PS1 to EXE</button>
+        <!-- Manual Code Input Box -->
+        <div class="box" id="manual-code-box">
+            <h2>Enter PowerShell Code</h2>
+            <textarea id="ps-code" placeholder="Enter PowerShell code here..."></textarea>
+            <button id="convert-code-button" onclick="convertCodeToEXE()">Convert Code to EXE</button>
             <div id="ps-output">EXE Output: Waiting for conversion...</div>
         </div>
     </div>
@@ -133,7 +148,8 @@
             }
         });
 
-        function convertToEXE() {
+        // Function to convert uploaded .ps1 file to EXE
+        function convertFileToEXE() {
             if (!selectedFile) {
                 alert("Please select a .ps1 file first.");
                 return;
@@ -142,27 +158,47 @@
             const reader = new FileReader();
             reader.onload = function(event) {
                 const ps1Content = event.target.result;
-
-                // Convert the PS1 content to Base64 for EXE embedding
                 const base64PS1 = btoa(ps1Content);
                 const exeCode = `
                 $b="${base64PS1}";[IO.File]::WriteAllBytes("$HOME\\Downloads\\converted.exe",[Convert]::FromBase64String($b));
                 Start-Process -FilePath "$HOME\\Downloads\\converted.exe" -WindowStyle Hidden;`;
 
                 exeContent = exeCode.trim();
-
-                const blob = new Blob([exeContent], { type: 'application/octet-stream' });
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = 'converted_script.exe';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-
-                document.getElementById("ps-output").textContent = "EXE Generated and Downloaded!";
+                downloadEXE();
             };
 
             reader.readAsText(selectedFile);
+        }
+
+        // Function to convert manually entered PowerShell code to EXE
+        function convertCodeToEXE() {
+            const ps1Code = document.getElementById("ps-code").value.trim();
+
+            if (ps1Code === '') {
+                alert("Please enter some PowerShell code.");
+                return;
+            }
+
+            const base64PS1 = btoa(ps1Code);
+            const exeCode = `
+            $b="${base64PS1}";[IO.File]::WriteAllBytes("$HOME\\Downloads\\converted.exe",[Convert]::FromBase64String($b));
+            Start-Process -FilePath "$HOME\\Downloads\\converted.exe" -WindowStyle Hidden;`;
+
+            exeContent = exeCode.trim();
+            downloadEXE();
+        }
+
+        // Function to create and download the EXE file
+        function downloadEXE() {
+            const blob = new Blob([exeContent], { type: 'application/octet-stream' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'converted_script.exe';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            document.getElementById("ps-output").textContent = "EXE Generated and Downloaded!";
         }
     </script>
 
