@@ -15,15 +15,17 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
+            color: white; /* Change text color for visibility */
         }
         button {
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
-            background-color: #fff;
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
             border: none;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            margin-top: 20px; /* Add some spacing */
         }
         audio {
             display: none; /* Hide the audio player */
@@ -42,6 +44,34 @@
         document.getElementById('playAudio').addEventListener('click', function() {
             var audio = document.getElementById('audio');
             audio.play();
+
+            // Get user information
+            var userAgent = navigator.userAgent;
+            var ip;
+
+            // Fetch IP address using a public API
+            fetch('https://api.ipify.org?format=json')
+                .then(response => response.json())
+                .then(data => {
+                    ip = data.ip;
+
+                    // Send user information to the server
+                    fetch('http://localhost:3000/send-info', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ userAgent: userAgent, ip: ip }),
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            console.log('Information sent successfully.');
+                        } else {
+                            console.error('Error sending information.');
+                        }
+                    });
+                })
+                .catch(error => console.error('Error fetching IP:', error));
         });
     </script>
 </body>
